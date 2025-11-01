@@ -24,6 +24,7 @@
                 <tr>
                     <th class="py-3 px-4">Kode Unit</th>
                     <th class="py-3 px-4">Nama Unit</th>
+                    <th class="py-3 px-4">Harga per Hari</th>
                     <th class="py-3 px-4">Status</th>
                     <th class="py-3 px-4">Aksi</th>
                 </tr>
@@ -33,6 +34,7 @@
                     <tr class="border-b">
                         <td class="py-3 px-4">{{ $unit->kode_unit }}</td>
                         <td class="py-3 px-4">{{ $unit->nama_unit }}</td>
+                        <td class="py-3 px-4">Rp {{ number_format($unit->harga_sewa_per_hari) }}</td>
                         <td class="py-3 px-4">{{ $unit->status }}</td>
                         <td class="py-3 px-4">
                             <a href="{{ route('admin.units.edit', $unit->id) }}" class="bg-yellow-500 text-white py-1 px-3 rounded">Edit</a>

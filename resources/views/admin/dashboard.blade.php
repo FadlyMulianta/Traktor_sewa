@@ -35,10 +35,10 @@
                     <h3 class="text-xl font-bold">Peminjaman Aktif</h3>
                 </a>
 
-                {{-- <a href="{{ route('admin.peminjaman.history') }}"
+                <a href="{{ route('admin.admin.peminjaman.histori') }}"
                     class="block p-6 bg-yellow-600 text-white rounded-lg shadow-md hover:bg-yellow-700">
                     <h3 class="text-xl font-bold">Riwayat Peminjaman</h3>
-                </a> --}}
+                </a>
 
                 <a href="{{ route('admin.units.index') }}"
                     class="block p-6 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700">

@@ -44,9 +44,11 @@ class PeminjamanController extends Controller
             // Hitung selisih hari keterlambatan
             $selisih_hari = $tanggal_kembali_sekarang->diffInDays($tanggal_kembali_seharusnya);
 
-            // Asumsi denda Rp 10.000 per hari
-            $denda_per_hari = 10000;
-            $denda = $selisih_hari * $denda_per_hari;
+            // Ambil harga sewa per hari dari unit yang bersangkutan
+            $harga_per_hari = $peminjaman->unit->harga_sewa_per_hari;
+
+            // Hitung denda
+            $denda = $selisih_hari * $harga_per_hari;
         }
         // --- Akhir Logika Denda ---
 

@@ -11,7 +11,7 @@
         <div class="flex justify-between items-center mb-4">
             <a href="{{ route('admin.dashboard') }}" class="text-blue-500">Kembali ke Dashboard</a>
 
-            <a href="{{ route('admin.peminjaman.print') }}" target="_blank" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
+            <a href="{{ route('admin.admin.peminjaman.print') }}" target="_blank" class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700">
                 Cetak Laporan
             </a>
         </div>

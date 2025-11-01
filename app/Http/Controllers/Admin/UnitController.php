@@ -30,7 +30,8 @@ class UnitController extends Controller
         // Validasi (Poin 16)
         $validator = Validator::make($request->all(), [
             'nama_unit' => 'required|string|max:255',
-            'kode_unit' => 'required|string|max:50|unique:units,kode_unit', // Poin 7.f
+            'kode_unit' => 'required|string|max:50|unique:units,kode_unit',
+            'harga_sewa_per_hari' => 'required|integer|min:0', // Poin 7.f
             'categories' => 'required|array|min:1', // Poin 6
         ]);
 
@@ -44,6 +45,7 @@ class UnitController extends Controller
         $unit = Unit::create([
             'nama_unit' => $request->nama_unit,
             'kode_unit' => $request->kode_unit,
+            'harga_sewa_per_hari' => $request->harga_sewa_per_hari,
             'status' => 'tersedia', // Default saat dibuat
         ]);
 
@@ -71,6 +73,7 @@ class UnitController extends Controller
             // Pastikan kode unit unik, KECUALI untuk unit ini sendiri
             'kode_unit' => 'required|string|max:50|unique:units,kode_unit,' . $unit->id,
             'status' => 'required|in:tersedia,dipinjam',
+            'harga_sewa_per_hari' => 'required|integer|min:0',
             'categories' => 'required|array|min:1',
         ]);
 
@@ -84,6 +87,7 @@ class UnitController extends Controller
         $unit->update([
             'nama_unit' => $request->nama_unit,
             'kode_unit' => $request->kode_unit,
+            'harga_sewa_per_hari' => $request->harga_sewa_per_hari,
             'status' => $request->status,
         ]);
 

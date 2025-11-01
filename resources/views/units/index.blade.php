@@ -82,7 +82,10 @@
                         <tr>
                             <th class="w-1/5 py-3 px-4 text-left">Kode Unit</th>
                             <th class="w-2/5 py-3 px-4 text-left">Nama Unit</th>
+
                             <th class="w-1/5 py-3 px-4 text-left">Kategori</th>
+                            <th class="w-1/5 py-3 px-4 text-left">Harga per Hari</th>
+
                             <th class="w-1/5 py-3 px-4 text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -100,6 +103,10 @@
                                         </span>
                                     @endforeach
                                 </td>
+                                <td class="py-3 px-4 font-bold text-gray-800">
+                                    Rp {{ number_format($unit->harga_sewa_per_hari) }}
+                                </td>
+                                
                                 <td class="py-3 px-4 text-center">
 
                                     @if ($unit->status == 'tersedia')
