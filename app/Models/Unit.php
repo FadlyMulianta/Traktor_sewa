@@ -14,4 +14,9 @@ class Unit extends Model
     {
         return $this->belongsToMany(Category::class, 'category_unit');
     }
+
+    public function peminjamans()
+    {
+        return $this->hasMany(Peminjaman::class);
+    }
 }
