@@ -13,7 +13,7 @@ class UnitSeeder extends Seeder
             'kode_unit' => 'LP001',
             'nama_unit' => 'mitsubishi traktor',
             'harga_sewa_per_hari' => 500000,
-            'status' => 'tersedia'
+            'stok' => 10
         ]);
         $unit1->categories()->attach(1); // Laptop
 
@@ -21,7 +21,7 @@ class UnitSeeder extends Seeder
             'kode_unit' => 'PR001',
             'nama_unit' => 'honda traktor 120hp',
             'harga_sewa_per_hari' => 750000,
-            'status' => 'tersedia'
+            'stok' => 15
         ]);
         $unit2->categories()->attach(2); // Proyektor
 
@@ -29,7 +29,7 @@ class UnitSeeder extends Seeder
             'kode_unit' => 'KB001',
             'nama_unit' => 'yamaha traktor mini 50hp',
             'harga_sewa_per_hari' => 100000,
-            'status' => 'tersedia'
+            'stok' => 20
         ]);
         $unit3->categories()->attach(3); // Kabel
     }

@@ -10,29 +10,26 @@ use Illuminate\Support\Facades\Validator;
 
 class UnitController extends Controller
 {
-    // MENAMPILKAN SEMUA DATA (READ)
     public function index()
     {
         $units = Unit::with('categories')->latest()->paginate(10);
         return view('admin.units.index', compact('units'));
     }
 
-    // MENAMPILKAN FORM TAMBAH (CREATE - Poin 9.g)
     public function create()
     {
-        $categories = Category::all(); // Ambil semua kategori untuk checklist
+        $categories = Category::all();
         return view('admin.units.create', compact('categories'));
     }
 
-    // MENYIMPAN DATA BARU (CREATE - Poin 9.g)
     public function store(Request $request)
     {
-        // Validasi (Poin 16)
         $validator = Validator::make($request->all(), [
+            'kode_unit' => 'required|string|max:50|unique:units,kode_unit', // <-- TETAP ADA
             'nama_unit' => 'required|string|max:255',
-            'kode_unit' => 'required|string|max:50|unique:units,kode_unit',
-            'harga_sewa_per_hari' => 'required|integer|min:0', // Poin 7.f
-            'categories' => 'required|array|min:1', // Poin 6
+            'harga_sewa_per_hari' => 'required|integer|min:0',
+            'stok' => 'required|integer|min:0', // <-- BARU
+            'categories' => 'required|array|min:1',
         ]);
 
         if ($validator->fails()) {
@@ -41,39 +38,31 @@ class UnitController extends Controller
                 ->withInput();
         }
 
-        // Buat Unit
         $unit = Unit::create([
+            'kode_unit' => $request->kode_unit, // <-- TETAP ADA
             'nama_unit' => $request->nama_unit,
-            'kode_unit' => $request->kode_unit,
             'harga_sewa_per_hari' => $request->harga_sewa_per_hari,
-            'status' => 'tersedia', // Default saat dibuat
+            'stok' => $request->stok, // <-- BARU
         ]);
 
-        // Lampirkan kategori (relasi many-to-many)
         $unit->categories()->attach($request->categories);
-
         return redirect()->route('admin.units.index')->with('success', 'Unit berhasil ditambahkan.');
     }
 
-    // MENAMPILKAN FORM EDIT (UPDATE - Poin 9.h)
     public function edit(Unit $unit)
     {
         $categories = Category::all();
-        // Ambil ID kategori yang sudah dimiliki unit ini
         $unitCategoryIds = $unit->categories->pluck('id')->toArray();
         return view('admin.units.edit', compact('unit', 'categories', 'unitCategoryIds'));
     }
 
-    // MENYIMPAN PERUBAHAN DATA (UPDATE - Poin 9.h)
     public function update(Request $request, Unit $unit)
     {
-        // Validasi
         $validator = Validator::make($request->all(), [
+            'kode_unit' => 'required|string|max:50|unique:units,kode_unit,' . $unit->id, // <-- TETAP ADA
             'nama_unit' => 'required|string|max:255',
-            // Pastikan kode unit unik, KECUALI untuk unit ini sendiri
-            'kode_unit' => 'required|string|max:50|unique:units,kode_unit,' . $unit->id,
-            'status' => 'required|in:tersedia,dipinjam',
             'harga_sewa_per_hari' => 'required|integer|min:0',
+            'stok' => 'required|integer|min:0', // <-- BARU
             'categories' => 'required|array|min:1',
         ]);
 
@@ -83,28 +72,26 @@ class UnitController extends Controller
                 ->withInput();
         }
 
-        // Update Unit
         $unit->update([
+            'kode_unit' => $request->kode_unit, // <-- TETAP ADA
             'nama_unit' => $request->nama_unit,
-            'kode_unit' => $request->kode_unit,
             'harga_sewa_per_hari' => $request->harga_sewa_per_hari,
-            'status' => $request->status,
+            'stok' => $request->stok, // <-- BARU
         ]);
 
-        // 'sync' akan meng-update relasi: hapus yg lama, tambah yg baru
         $unit->categories()->sync($request->categories);
-
         return redirect()->route('admin.units.index')->with('success', 'Unit berhasil diperbarui.');
     }
 
-    // MENGHAPUS DATA (DELETE - Poin 9.i)
     public function destroy(Unit $unit)
     {
-        // Hapus relasi di pivot tabel
-        $unit->categories()->detach();
-        // Hapus unit
-        $unit->delete();
+        // Cek jika masih ada yang pinjam
+        if ($unit->stok_tersedia != $unit->stok) {
+            return redirect()->route('admin.units.index')->with('error', 'Unit tidak bisa dihapus karena masih ada yang dipinjam.');
+        }
 
+        $unit->categories()->detach();
+        $unit->delete();
         return redirect()->route('admin.units.index')->with('success', 'Unit berhasil dihapus.');
     }
 }

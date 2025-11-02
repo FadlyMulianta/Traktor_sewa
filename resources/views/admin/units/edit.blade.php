@@ -26,27 +26,23 @@
             @csrf
             @method('PUT')
             <div class="mb-4">
-                <label for="nama_unit" class="block text-gray-700">Nama Unit</label>
-                <input type="text" name="nama_unit" id="nama_unit" class="w-full px-3 py-2 border rounded-lg"
-                    value="{{ old('nama_unit', $unit->nama_unit) }}">
+                <label for="kode_unit" class="block text-gray-700">Kode Unit</labe> <input type="text"
+                        name="kode_unit" id="kode_unit" class="w-full px-3 py-2 border rounded-lg"
+                        value="{{ old('kode_unit', $unit->kode_unit) }}">
             </div>
             <div class="mb-4">
-                <label for="kode_unit" class="block text-gray-700">Kode Unit</label>
-                <input type="text" name="kode_unit" id="kode_unit" class="w-full px-3 py-2 border rounded-lg"
-                    value="{{ old('kode_unit', $unit->kode_unit) }}">
+                <label for="nama_unit" ...>Nama Unit</label>
+                <input type="text" name="nama_unit" ... value="{{ old('nama_unit', $unit->nama_unit) }}">
             </div>
             <div class="mb-4">
-                <label for="harga_sewa_per_hari" class="block text-gray-700">Harga Sewa per Hari</label>
-                <input type="number" name="harga_sewa_per_hari" id="harga_sewa_per_hari"
-                    class="w-full px-3 py-2 border rounded-lg"
-                    value="{{ old('harga_sewa_per_hari', $unit->harga_sewa_per_hari) }}" min="0">
+                <label for="harga_sewa_per_hari" ...>Harga Sewa per Hari</label>
+                <input type="number" name="harga_sewa_per_hari" ...
+                    value="{{ old('harga_sewa_per_hari', $unit->harga_sewa_per_hari) }}">
             </div>
             <div class="mb-4">
-                <label for="status" class="block text-gray-700">Status</label>
-                <select name="status" id="status" class="w-full px-3 py-2 border rounded-lg">
-                    <option value="tersedia" @if (old('status', $unit->status) == 'tersedia') selected @endif>Tersedia</option>
-                    <option value="dipinjam" @if (old('status', $unit->status) == 'dipinjam') selected @endif>Dipinjam</option>
-                </select>
+                <label for="stok" ...>Stok Total</label>
+                <input type="number" name="stok" id="stok" class="w-full px-3 py-2 border rounded-lg"
+                    value="{{ old('stok', $unit->stok) }}" min="0">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700">Kategori</label>

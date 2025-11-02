@@ -6,13 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Unit;
 use App\Models\Peminjaman;
-use Carbon\Carbon; // Penting untuk manajemen tanggal
+use Carbon\Carbon;
 
 class PeminjamanController extends Controller
 {
-    /**
-     * Proses peminjaman unit (Poin 10 & 11)
-     */
     public function store(Request $request)
     {
         $request->validate(['unit_id' => 'required|exists:units,id']);
@@ -20,12 +17,12 @@ class PeminjamanController extends Controller
         $user = Auth::user();
         $unit = Unit::findOrFail($request->unit_id);
 
-        // Validasi 1: Cek apakah unit masih tersedia
-        if ($unit->status != 'tersedia') {
-            return redirect()->route('units.index')->with('error', 'Unit ini sudah tidak tersedia.');
+        // VALIDASI BARU: Cek stok menggunakan accessor
+        if ($unit->stok_tersedia <= 0) {
+            return redirect()->route('units.index')->with('error', 'Stok unit ini sudah habis.');
         }
 
-        // Validasi 2: Cek Poin 10 (Maksimal 2 unit)
+        // Validasi Poin 10 (Maks 2 unit per user) - INI TETAP SAMA
         $jumlahPinjamanAktif = Peminjaman::where('user_id', $user->id)
             ->where('status', 'dipinjam')
             ->count();
@@ -34,31 +31,22 @@ class PeminjamanController extends Controller
             return redirect()->route('units.index')->with('error', 'Anda sudah mencapai batas maksimal 2 unit peminjaman.');
         }
 
-        // --- Proses Peminjaman ---
-
-        // 1. Buat data peminjaman
+        // Proses Peminjaman (Tidak berubah)
         Peminjaman::create([
             'user_id' => $user->id,
             'unit_id' => $unit->id,
             'tanggal_pinjam' => Carbon::now(),
-            'tanggal_kembali' => Carbon::now()->addDays(5), // Poin 11 (Maks 5 hari)
+            'tanggal_kembali' => Carbon::now()->addDays(5),
             'status' => 'dipinjam',
         ]);
-
-        // 2. Update status unit menjadi 'dipinjam'
-        $unit->status = 'dipinjam';
-        $unit->save();
 
         return redirect()->route('units.index')->with('success', 'Unit berhasil dipinjam!');
     }
 
-    /**
-     * Menampilkan riwayat peminjaman milik user (Poin 14)
-     */
     public function myPeminjaman()
     {
         $userId = Auth::id();
-        $peminjamans = Peminjaman::with('unit') // Load relasi unit
+        $peminjamans = Peminjaman::with('unit')
             ->where('user_id', $userId)
             ->orderBy('tanggal_pinjam', 'desc')
             ->paginate(10);

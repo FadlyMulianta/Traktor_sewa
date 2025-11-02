@@ -38,8 +38,9 @@
                             <th class="py-3 px-4 text-left">Unit</th>
                             <th class="py-3 px-4 text-left">Tgl Pinjam</th>
                             <th class="py-3 px-4 text-left">Batas Kembali</th>
-                            <th class="py-3 px-4 text-left">Tgl Dikembalikan</th>
-                            <th class="py-3 px-4 text-left">Status</th>
+                            <th class="py-3 px-4 text-left">Total Biaya (5 Hari)</th>
+                            <th class="py-3 px-4 text-left">Sisa Waktu</th>
+                            <th class="py-3 px-4 text-left">Denda</th> <th class="py-3 px-4 text-left">Status</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
@@ -48,36 +49,75 @@
                                 <td class="py-3 px-4">{{ $pinjam->unit->nama_unit }} ({{ $pinjam->unit->kode_unit }})</td>
                                 <td class="py-3 px-4">{{ \Carbon\Carbon::parse($pinjam->tanggal_pinjam)->format('d M Y') }}</td>
                                 <td class="py-3 px-4 font-bold text-red-600">{{ \Carbon\Carbon::parse($pinjam->tanggal_kembali)->format('d M Y') }}</td>
-                                <td class="py-3 px-4">
-                                    {{ $pinjam->tanggal_pengembalian_sebenarnya ? \Carbon\Carbon::parse($pinjam->tanggal_pengembalian_sebenarnya)->format('d M Y') : '-' }}
+                                <td class="py-3 px-4 font-bold text-blue-600">
+                                    Rp {{ number_format($pinjam->unit->harga_sewa_per_hari * 5) }}
                                 </td>
                                 <td class="py-3 px-4">
                                     @if ($pinjam->status == 'dipinjam')
-                                        <span class="rounded-full px-3 py-1 text-sm font-semibold bg-yellow-100 text-yellow-800">
-                                            Dipinjam
+                                        <span class="font-bold sisa-waktu" 
+                                              data-tanggal-kembali="{{ $pinjam->tanggal_kembali }}">
+                                            Menghitung...
                                         </span>
                                     @else
-                                        <span class="rounded-full px-3 py-1 text-sm font-semibold bg-green-100 text-green-800">
-                                            Dikembalikan
-                                        </span>
+                                        <span>-</span>
+                                    @endif
+                                </td>
+                                
+                                <td class="py-3 px-4 font-bold">
+                                    @if($pinjam->denda > 0)
+                                        <span class="text-red-600">Rp {{ number_format($pinjam->denda) }}</span>
+                                    @else
+                                        <span>-</span>
+                                    @endif
+                                </td>
+                                <td class="py-3 px-4">
+                                    @if ($pinjam->status == 'dipinjam')
+                                        <span class="rounded-full px-3 py-1 text-sm font-semibold bg-yellow-100 text-yellow-800">Dipinjam</span>
+                                    @else
+                                        <span class="rounded-full px-3 py-1 text-sm font-semibold bg-green-100 text-green-800">Dikembalikan</span>
                                     @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="py-4 px-4 text-center text-gray-500">
-                                    Anda belum pernah meminjam unit.
+                                <td colspan="7" class="py-4 px-4 text-center text-gray-500"> Anda belum pernah meminjam unit.
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-
+            
             <div class="mt-6">
                 {{ $peminjamans->links() }}
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timerElements = document.querySelectorAll('.sisa-waktu');
+            function updateTimers() {
+                timerElements.forEach(timer => {
+                    const targetDate = new Date(timer.dataset.tanggalKembali).getTime();
+                    const now = new Date().getTime();
+                    const distance = targetDate - now;
+    
+                    if (distance < 0) {
+                        timer.innerHTML = "Waktu Habis";
+                        timer.classList.add('text-red-600');
+                    } else {
+                        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        timer.innerHTML = `${days}h ${hours}j ${minutes}m ${seconds}d`;
+                    }
+                });
+            }
+            updateTimers();
+            setInterval(updateTimers, 1000);
+        });
+    </script>
 </body>
 </html>

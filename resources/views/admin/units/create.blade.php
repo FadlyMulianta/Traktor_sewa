@@ -25,20 +25,22 @@
         <form action="{{ route('admin.units.store') }}" method="POST">
             @csrf
             <div class="mb-4">
-                <label for="nama_unit" class="block text-gray-700">Nama Unit</label>
-                <input type="text" name="nama_unit" id="nama_unit" class="w-full px-3 py-2 border rounded-lg"
-                    value="{{ old('nama_unit') }}">
-            </div>
-            <div class="mb-4">
-                <label for="kode_unit" class="block text-gray-700">Kode Unit</label>
-                <input type="text" name="kode_unit" id="kode_unit" class="w-full px-3 py-2 border rounded-lg"
+                <label for="kode_unit" class="block text-gray-700">Kode Unit</label> <input type="text"
+                    name="kode_unit" id="kode_unit" class="w-full px-3 py-2 border rounded-lg"
                     value="{{ old('kode_unit') }}">
             </div>
             <div class="mb-4">
-                <label for="harga_sewa_per_hari" class="block text-gray-700">Harga Sewa per Hari</label>
-                <input type="number" name="harga_sewa_per_hari" id="harga_sewa_per_hari"
-                    class="w-full px-3 py-2 border rounded-lg" value="{{ old('harga_sewa_per_hari', 0) }}"
-                    min="0">
+                <label for="nama_unit" class.a..>Nama Unit</label>
+                <input type="text" name="nama_unit" ...>
+            </div>
+            <div class="mb-4">
+                <label for="harga_sewa_per_hari" ...>Harga Sewa per Hari</label>
+                <input type="number" name="harga_sewa_per_hari" ...>
+            </div>
+            <div class="mb-4">
+                <label for="stok" class="block text-gray-700">Stok Total</label>
+                <input type="number" name="stok" id="stok" class="w-full px-3 py-2 border rounded-lg"
+                    value="{{ old('stok', 0) }}" min="0">
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700">Kategori (Poin 6: Bisa multiple)</label>
