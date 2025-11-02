@@ -61,16 +61,16 @@ class PeminjamanController extends Controller
         ]);
 
         // 2. Update status Unit (kembalikan jadi 'tersedia')
-        $peminjaman->unit()->update([
-            'status' => 'tersedia'
-        ]);
+        // $peminjaman->unit()->update([
+        //     'status' => 'tersedia'
+        // ]);
 
-        $pesan_sukses = 'Unit berhasil dikembalikan.';
-        if ($denda > 0) {
-            $pesan_sukses .= ' Denda yang dikenakan: Rp ' . number_format($denda);
-        }
+        // $pesan_sukses = 'Unit berhasil dikembalikan.';
+        // if ($denda > 0) {
+        //     $pesan_sukses .= ' Denda yang dikenakan: Rp ' . number_format($denda);
+        // }
 
-        return redirect()->route('admin.peminjaman.aktif')->with('success', $pesan_sukses);
+        return redirect()->route('admin.peminjaman.aktif');
     }
 
     public function history()
